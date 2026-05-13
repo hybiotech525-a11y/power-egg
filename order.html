@@ -43,7 +43,7 @@
         <table id="resultTable">
             <thead>
                 <tr>
-                    <th>日期</th><th>姓名</th><th>電話</th><th>地址</th><th>送達狀態</th>
+                    <th>日期</th><th>姓名</th><th>電話</th><th>地址</th><th>數量</th><th>送達狀態</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -70,7 +70,7 @@
                 .then(data => {
                     const tbody = document.getElementById('tableBody');
                     if (data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">找不到符合條件的資料</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">找不到符合條件的資料</td></tr>';
                     } else {
                         tbody.innerHTML = data.map(row => `
                             <tr>
@@ -78,6 +78,7 @@
                                 <td>${row.name}</td>
                                 <td>${row.phone}</td>
                                 <td>${row.address}</td>
+                                <td>${row.count}</td>
                                 <td>
                                     ${row.status === '未送達' 
                                         ? `<button class="btn-status not-delivered" onclick="updateStatus(${row.rowId})">未送達</button>` 
