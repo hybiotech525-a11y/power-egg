@@ -2,40 +2,55 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>訂單管理系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單查詢管理</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
-        .filter-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input, button { padding: 8px; margin: 5px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #eee; }
-        .btn-unset { background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
-        .btn-set { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f8f9fa; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .filter-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .filter-row { margin-bottom: 10px; }
+        input[type="date"], input[type="text"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px; }
+        button#searchBtn { background: #007bff; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #f1f1f1; color: #333; }
+        .btn-status { border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .not-delivered { background-color: #dc3545; color: white; }
+        .delivered { background-color: #28a745; color: white; cursor: default; }
     </style>
 </head>
 <body>
-    <h2>訂單查詢與管理</h2>
-    <div class="filter-section">
-        日期：<input type="date" id="startDate"> 到 <input type="date" id="endDate"> <br>
-        姓名：<input type="text" id="searchName" placeholder="輸入關鍵字"> 
-        <label><input type="checkbox" id="unfilledOnly"> 只看未送達</label>
-        <button onclick="fetchData()">開始查詢</button>
+    <div class="container">
+        <h2>訂單查詢管理</h2>
+        <div class="filter-box">
+            <div class="filter-row">
+                日期範圍：<input type="date" id="startDate"> 至 <input type="date" id="endDate">
+            </div>
+            <div class="filter-row">
+                姓名搜尋：<input type="text" id="searchName" placeholder="輸入姓名關鍵字">
+                <label><input type="checkbox" id="unfilledOnly"> 僅顯示未送達</label>
+                <button id="searchBtn" onclick="fetchData()">搜尋</button>
+            </div>
+        </div>
+
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>日期</th><th>姓名</th><th>電話</th><th>地址</th><th>送達狀態</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
     </div>
 
-    <table id="resultTable">
-        <thead>
-            <tr>
-                <th>訂購日期</th><th>姓名</th><th>手機</th><th>地址</th><th>狀態</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-
     <script>
+        // 替換為你最新部署的 Web App URL
         const scriptURL = '你的_APPS_SCRIPT_網址';
 
         function fetchData() {
+            const btn = document.getElementById('searchBtn');
+            btn.innerHTML = '搜尋中...';
+            
             const start = document.getElementById('startDate').value;
             const end = document.getElementById('endDate').value;
             const name = document.getElementById('searchName').value;
@@ -47,27 +62,35 @@
                 .then(res => res.json())
                 .then(data => {
                     const tbody = document.getElementById('tableBody');
-                    tbody.innerHTML = data.map(row => `
-                        <tr>
-                            <td>${row.date}</td>
-                            <td>${row.name}</td>
-                            <td>${row.phone}</td>
-                            <td>${row.address}</td>
-                            <td>${row.status === '未送達' 
-                                ? `<button class="btn-unset" onclick="updateStatus(${row.rowId})">未送達</button>` 
-                                : `<span class="btn-set">已送達</span>`}</td>
-                        </tr>
-                    `).join('');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">找不到符合條件的資料</td></tr>';
+                    } else {
+                        tbody.innerHTML = data.map(row => `
+                            <tr>
+                                <td>${row.date}</td>
+                                <td>${row.name}</td>
+                                <td>${row.phone}</td>
+                                <td>${row.address}</td>
+                                <td>
+                                    ${row.status === '未送達' 
+                                        ? `<button class="btn-status not-delivered" onclick="updateStatus(${row.rowId})">未送達</button>` 
+                                        : `<button class="btn-status delivered" disabled>已送達</button>`}
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                    btn.innerHTML = '搜尋';
                 });
         }
 
         function updateStatus(rowId) {
-            if(!confirm("確定改為已送達嗎？")) return;
+            if(!confirm("確定將此訂單改為「已送達」嗎？")) return;
+            
             fetch(scriptURL, {
                 method: 'POST',
-                body: JSON.stringify({action: 'update', rowId: rowId})
+                body: JSON.stringify({ action: 'update', rowId: rowId })
             }).then(() => {
-                alert("更新成功");
+                alert("狀態已更新");
                 fetchData(); // 重新整理列表
             });
         }
