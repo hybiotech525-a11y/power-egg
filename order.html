@@ -18,7 +18,15 @@
         .not-delivered { background-color: #dc3545; color: white; }
         .delivered { background-color: #28a745; color: white; cursor: default; }
         /* 新加這段：設定第 3 欄（電話）寬度 */
-        th:nth-child(3), td:nth-child(3) { 
+                th:nth-child(1), td:nth-child(1) { 
+            width: 30px; 
+            white-space: nowrap; 
+        }
+                th:nth-child(2), td:nth-child(2) { 
+            width: 30px; 
+            white-space: nowrap; 
+        }
+                th:nth-child(3), td:nth-child(3) { 
             width: 30px; 
             white-space: nowrap; 
         }
@@ -27,7 +35,11 @@
             white-space: nowrap; 
         }
                         th:nth-child(5), td:nth-child(5) { 
-            width: 10px; 
+            width: 20px; 
+            white-space: nowrap; 
+        }
+            th:nth-child(6), td:nth-child(6) { 
+            width: 30px; 
             white-space: nowrap; 
         }
     </style>
