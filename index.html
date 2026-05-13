@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>產品訂購表單</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
+        .product-img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        h2 { text-align: center; color: #333; }
+        label { display: block; margin-top: 15px; color: #666; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; background-color: #28a745; color: white; border: none; padding: 12px; margin-top: 25px; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 你的 Google Drive 圖片 -->
+        <img src="https://lh3.googleusercontent.com/d/16JRNEag-ISpor9RMP8ZpmFXOMQRnRFF9" alt="產品圖片" class="product-img">        
+        <h2>訂購表單</h2>
+        <form id="orderForm">
+            <label>訂購人姓名</label>
+            <input type="text" name="name" placeholder="請輸入姓名" required>
+            
+            <label>手機號碼</label>
+            <input type="tel" name="phone" placeholder="0912-345-678" required>
+            
+            <label>收件地址</label>
+            <input type="text" name="address" placeholder="請輸入完整地址" required>
+            
+            <button type="submit" id="submitBtn">提交訂單</button>
+        </form>
+    </div>
+
+    <script>
+        // 請在此處貼上你在 Google Apps Script 部署後得到的 Web App URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw5MnGsXhoN_5yMsmULFHTbCgEBk_MTo4InyFdzMMVEQz-225ZcCxNGopoQyVvqovY6/exec';
+        const form = document.getElementById('orderForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerHTML = '傳送中...';
+            
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    alert("訂購成功！我們已收到您的資訊。");
+                    btn.disabled = false;
+                    btn.innerHTML = '提交訂單';
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert("發生錯誤，請稍後再試。");
+                    btn.disabled = false;
+                    btn.innerHTML = '提交訂單';
+                });
+        });
+    </script>
+</body>
+</html>
