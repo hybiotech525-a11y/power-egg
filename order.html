@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>能量雞蛋訂單查詢管理</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f8f9fa; padding: 20px; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f8f9fa; padding: 12px; }
         .container { max-width: 900px; margin: auto; }
         .filter-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .filter-row { margin-bottom: 10px; }
@@ -24,8 +24,11 @@
         <h2>訂單查詢管理</h2>
         <div class="filter-box">
             <div class="filter-row">
-                日期範圍：<input type="date" id="startDate"> 至 <input type="date" id="endDate">
-            </div>
+                 日期範圍：<input type="date" id="startDate">
+           </div>
+            <div class="filter-row">
+                至：<input type="date" id="endDate">
+           </div>
             <div class="filter-row">
                 姓名搜尋：<input type="text" id="searchName" placeholder="輸入姓名關鍵字">
                 <label><input type="checkbox" id="unfilledOnly"> 僅顯示未送達</label>
