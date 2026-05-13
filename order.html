@@ -17,6 +17,11 @@
         .btn-status { border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .not-delivered { background-color: #dc3545; color: white; }
         .delivered { background-color: #28a745; color: white; cursor: default; }
+        /* 新加這段：設定第 3 欄（電話）寬度 */
+        th:nth-child(3), td:nth-child(3) { 
+            width: 110px; 
+            white-space: nowrap; 
+        }
     </style>
 </head>
 <body>
