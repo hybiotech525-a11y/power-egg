@@ -31,9 +31,13 @@
            </div>
             <div class="filter-row">
                 姓名搜尋：<input type="text" id="searchName" placeholder="輸入姓名關鍵字">
-                <label><input type="checkbox" id="unfilledOnly"> 僅顯示未送達</label>
-                <button id="searchBtn" onclick="fetchData()">搜尋</button>
             </div>
+            <div class="filter-row">
+                <label><input type="checkbox" id="unfilledOnly"> 僅顯示未送達</label>
+            </div>   
+            <div class="filter-row">
+                <button id="searchBtn" onclick="fetchData()">搜尋</button>
+            </div>    
         </div>
 
         <table id="resultTable">
